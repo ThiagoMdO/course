@@ -1,6 +1,7 @@
 package com.classDevSuperiorSpringboot.course.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -28,6 +29,7 @@ public class User implements Serializable {
 
     private String password;
 
+    @JsonIgnore // usar o @JsonIgnore para não permitir o looping de associação
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 
