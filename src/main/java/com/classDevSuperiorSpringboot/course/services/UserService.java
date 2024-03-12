@@ -4,6 +4,7 @@ import com.classDevSuperiorSpringboot.course.model.entities.User;
 import com.classDevSuperiorSpringboot.course.repositories.UserRepository;
 import com.classDevSuperiorSpringboot.course.services.exceptions.DatabaseException;
 import com.classDevSuperiorSpringboot.course.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,14 @@ public class UserService {
     }
 
     public User update(Long id, User user){
-        //O referenceById é mais eficiente que o findById, deixando o objeto preparado para mexer para depois mexer no banco de dados
-        User entity = userRepository.getReferenceById(id);
-        updateData(entity, user);
-        return userRepository.save(entity);
+        try {
+            //O referenceById é mais eficiente que o findById, deixando o objeto preparado para mexer para depois mexer no banco de dados
+            User entity = userRepository.getReferenceById(id);
+            updateData(entity, user);
+            return userRepository.save(entity);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User entity, User obj){
