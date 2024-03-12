@@ -36,7 +36,8 @@ public class UserResource {
         user = userService.insert(user);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(user);
 
-        //Forma mais correta de inserir um objeto, irá retornar o codigo 201 mais o header com o endereço do objeto criado
+        //Forma mais correta se o objetivo for acessar direto uma pagina do usuario (exemplo), de inserir um objeto,
+        // irá retornar o codigo 201 mais o header com o endereço do objeto criado
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(user);
@@ -45,8 +46,14 @@ public class UserResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         userService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         //ou
-//        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user){
+        User userAtt = userService.update(id, user);
+        return ResponseEntity.ok().body(userAtt);
     }
 }

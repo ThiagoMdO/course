@@ -32,4 +32,17 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public User update(Long id, User user){
+        //O referenceById é mais eficiente que o findById, deixando o objeto preparado para mexer para depois mexer no banco de dados
+        User entity = userRepository.getReferenceById(id);
+        updateData(entity, user);
+        return userRepository.save(entity);
+    }
+
+    private void updateData(User entity, User obj){
+        entity.setName(obj.getName());
+        entity.setEmail(obj.getEmail());
+        entity.setPhone(obj.getPhone());
+    }
+
 }
